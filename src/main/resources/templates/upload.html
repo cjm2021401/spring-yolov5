@@ -1,27 +1,124 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Spring Boot & Thymeleaf File Upload</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <title>Mosaic Cigarette&Tattoo</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <style>
+        h3, p {
+            text-align: center;
+        }
+
+        .form-group {
+            margin: 30px;
+        }
+
+        .file-upload .form-control {
+            height: 150px;
+            outline: 1px dashed #ccc;
+            outline-offset: -15px;
+            background-color: #eee;
+        }
+        .file-upload .form-control:before {
+            content: "\f093";
+            font: normal normal normal 14px/1 FontAwesome;
+            font-size: 3em;
+            left: 0;
+            right: 0;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+        }
+        .file-upload .form-control:after {
+            content: attr(data-message);
+            left: 0;
+            right: 0;
+            bottom: 0;
+            text-align: center;
+            display: block;
+        }
+        .file-upload .form-control input[type="file"] {
+            cursor: pointer;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+        }
+
+    </style>
 </head>
 <body>
 
-<section class="my-5">
+
+<section class="my-5" style="margin-top: 100px">
     <div class="container">
         <div class="row">
-            <div class="col-md-8 mx-auto">
-                <h2>Upload File Example</h2>
-                <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
+            <div class="col-md-2 mx-auto"></div>
+            <div class="col-md-8 mx-auto" style="text-align: center">
+                <h2>Mosaic Cigarette&Tattoo</h2>
+                <hr class="my-4" style="background-color: black">
                 <form method="post" th:action="@{/upload}" enctype="multipart/form-data">
+                    <div class="form-group file-upload" required="required">
+                        <label class="control-label" for="document_file">File Upload</label><br>
+                        <div>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                <div class="form-control" data-message="Click to select file or drag n drop it here">
+                                    <input required="required" title="Click to select file or drag n drop it here" type="file" name="file" id="document_file">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                     <div class="form-group">
-                        <input type="file" name="file" class="form-control-file">
+                        <div >
+                            <input class="form-control" id="host" name="host" type="text" placeholder="Input host" aria-label="Input Host">
+                        </div><br/>
+                        <div >
+                            <input class="form-control" id="port" name="port" type="number" placeholder="Input port" aria-label="Input Port">
+                        </div><br/>
+                        <div>
+                            <input type="password" placeholder="Input password" name="password" class="form-control" id="inputPassword">
+                        </div><br/>
                     </div>
                     <button type="submit" class="btn btn-primary">Upload File</button>
                 </form>
+                <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
             </div>
         </div>
     </div>
-</section>
 
+
+
+</section>
+<script type="text/javascript">
+    $('input[type="file"]').on('change', function(e){
+        var fileName = e.target.files[0].name;
+        if (fileName) {
+            $(e.target).parent().attr('data-message', fileName);
+        }
+    });
+
+    $(document).on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+        if ($('input[type="file"]').length) {
+            if (['dragover', 'dragenter'].indexOf(e.type) > -1) {
+                if (window.dragTimeout)
+                    clearTimeout(window.dragTimeout);
+                $('body').addClass('dragged');
+            } else if (['dragleave', 'drop'].indexOf(e.type) > -1) {
+                // Without the timeout, some dragleave events are triggered
+                // when the :after appears, making it blink...
+                window.dragTimeout = setTimeout(function() {
+                    $('body').removeClass('dragged');
+                }, 100);
+            }
+        }
+    });
+</script>
 </body>
 </html>

@@ -2,19 +2,28 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Spring Boot & Thymeleaf File Upload</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        img{
+            max-width: 100%;
+            height: auto !important;
+        }
+    </style>
 </head>
 <body>
 
-<section class="my-5">
+<section class="my-5" style="margin-top: 100px">
     <div class="container">
         <div class="row">
-            <div class="col-md-8 mx-auto">
-                <h2>Upload File Example</h2>
+            <div class="col-md-8 mx-auto" style="text-align: center">
+                <h2>Detact&Mosaic Result</h2>
+                <hr class="my-4" style="background-color: black">
                 <img th:src="@{${img_url}}"  />
+                <hr class="my-4" style="background-color: black">
+                <a th:href="@{/upload}"><button class="btn btn-primary">홈으로</button></a>
             </div>
         </div>
-        <a th:href="@{/upload}"><button class="btn btn-primary">홈으로</button></a>
+
     </div>
 </section>
 

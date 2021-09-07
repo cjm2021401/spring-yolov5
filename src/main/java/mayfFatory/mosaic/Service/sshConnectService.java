@@ -9,12 +9,16 @@ import java.io.*;
 @Service
 public class sshConnectService {
     private String username ="root";
-    private int port=11613;
-    private String host="6.tcp.ngrok.io";
-    private String password = "mayf";
+    private int port=0;
+    private String host="";
+    private String password = "";
     private String localFile = "./uploads/"; // 전송 파일 위치(로컬)
     private String serverPath = "/content/yolov5/"; // 대상 디렉토리(서버)
-
+    public void setsshConnect(String host, String port, String password){
+        this.host=host;
+        this.port=Integer.parseInt(port);
+        this.password=password;
+    }
     public void connect(String Path) {
         localFile=localFile+Path;
         File file = new File(localFile);
