@@ -9,12 +9,11 @@ import java.io.*;
 @Service
 public class sshConnectService {
     private String username ="root";
-    private int port=15419;
-    private String host="8.tcp.ngrok.io";
+    private int port=11613;
+    private String host="6.tcp.ngrok.io";
     private String password = "mayf";
     private String localFile = "./uploads/"; // 전송 파일 위치(로컬)
     private String serverPath = "/content/yolov5/"; // 대상 디렉토리(서버)
-
 
     public void connect(String Path) {
         localFile=localFile+Path;
@@ -23,7 +22,6 @@ public class sshConnectService {
         Channel inputChannel = null;
         Channel yoloChannel=null;
         ChannelSftp channelSftp = null;
-        FileInputStream in = null;
         JSch jsch = new JSch();
         try {
             session = jsch.getSession(username, host, port);
@@ -40,58 +38,26 @@ public class sshConnectService {
 
             // 채널을 SSH용 채널 객체로 캐스팅
             channelSftp = (ChannelSftp) inputChannel;
-            System.out.println("==> Connected to" + host);
-            in =new FileInputStream(file);
-
-            channelSftp.cd(serverPath);
-            channelSftp.put(in, file.getName());
-
-            System.out.println("=> Uploaded : " + file.getPath() + " at " + host);
-
-
             yoloChannel =session.openChannel("exec");
             ChannelExec channelExec=(ChannelExec) yoloChannel;
 
-            System.out.println("==> Connected to" + host);
-            channelExec.setCommand("cd /content/yolov5/; python3 detect.py --weights /content/yolov5/3000Image_YOLOv5s_best.pt --img 416 --conf 0.1 --source /content/yolov5/"+Path);
-            channelExec.connect();
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            System.out.println("=> Uploaded : " + file.getPath() + " at " + host);
+            Upload(file, channelSftp);
+
             System.out.println("==> Detecting Object using yolov5" + host);
+            goYolov5(channelExec, Path);
+            Thread.sleep(2500);//wait for yolov5
 
-            channelSftp.cd(serverPath+"runs/detect/exp/");
-            InputStream is=null;
-            FileOutputStream out=null;
-            try {
-                is=channelSftp.get(Path);
-            }catch (SftpException e){
-                e.printStackTrace();
-            }
+            System.out.println("==>Get result file at"+host);
+            getDetectedImage(channelSftp, Path);
 
-            try {
-
-                out = new FileOutputStream( new File("./src/main/resources/static/images/"+Path) );
-                int i;
-                while ((i = is.read()) != -1) {
-                    out.write(i);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                out.close();
-                is.close();
-            }
-            channelExec.setCommand("cd /content/yolov5/; rm "+Path+"; rm -r runs");
-            channelExec.connect();
+            System.out.println("==>remove file at "+host);
+            removeFile(channelExec, Path);
 
         }catch (Exception e){
             e.printStackTrace();;
         }finally {
             try {
-                in.close();
                 channelSftp.exit();
                 yoloChannel.disconnect();
                 inputChannel.disconnect();
@@ -101,9 +67,46 @@ public class sshConnectService {
                 e.printStackTrace();
             }
         }
+        localFile="./uploads/";
     }
 
+    public void removeFile(ChannelExec channelExec, String Path) throws Exception{
+        channelExec.setCommand("cd /content/yolov5/; rm "+Path+"; rm -r runs");
+        channelExec.connect();
+    }
 
+    public void getDetectedImage(ChannelSftp channelSftp, String Path) throws Exception{
+        channelSftp.cd(serverPath+"runs/detect/exp/");
+        InputStream is=null;
+        FileOutputStream out=null;
+        try {
+            is=channelSftp.get(Path);
+        }catch (SftpException e){
+            e.printStackTrace();
+        }
+        try {
+            out = new FileOutputStream( new File("./src/main/resources/static/images/"+Path) );
+            int i;
+            while ((i = is.read()) != -1) {
+                out.write(i);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            out.close();
+            is.close();
+        }
+    }
 
+    public void Upload(File file, ChannelSftp channelSftp) throws  Exception{
+            FileInputStream in =new FileInputStream(file);
+            channelSftp.cd(serverPath);
+            channelSftp.put(in, file.getName());
+            in.close();
+    }
+    public void goYolov5(ChannelExec channelExec, String Path) throws Exception{
 
+            channelExec.setCommand("cd /content/yolov5/; python3 detectAndmosaic.py --weights /content/yolov5/tattoocigar_lbest.pt --img 416 --conf 0.1 --source /content/yolov5/"+Path);
+            channelExec.connect();
+    }
 }

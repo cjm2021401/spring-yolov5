@@ -54,11 +54,10 @@ public class APIcontroller {
 
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes attributes, Model model) {
-
         // check if file is empty
         if (file.isEmpty()) {
             attributes.addFlashAttribute("message", "Please select a file to upload.");
-            return "redirect:/upload";
+            return "upload";
         }
 
         // normalize the file path
@@ -73,12 +72,10 @@ public class APIcontroller {
             return "result";
         } catch (IOException e) {
             e.printStackTrace();
+            attributes.addFlashAttribute("message", "You successfully uploaded " + fileName + '!');
+            return "upload";
         }
 
-        // return success response
-        attributes.addFlashAttribute("message", "You successfully uploaded " + fileName + '!');
-
-        return "redirect:/upload";
     }
 
 
