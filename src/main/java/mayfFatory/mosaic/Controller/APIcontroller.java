@@ -47,8 +47,8 @@ public class APIcontroller {
 
     @GetMapping(value = "images/{imagename}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> userSearch(@PathVariable("imagename") String imagename) throws IOException {
-        InputStream imageStream = new FileInputStream("./src/main/resources/static/images/" + imagename);
-        File file=new File("./src/main/resources/static/images/" + imagename);
+        InputStream imageStream = new FileInputStream("./result/" + imagename);
+        File file=new File("./result/" + imagename);
         byte[] imageByteArray = IOUtils.toByteArray(imageStream);
         imageStream.close();
         if(file.exists()) file.delete();

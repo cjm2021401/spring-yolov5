@@ -89,7 +89,7 @@ public class sshConnectService {
             e.printStackTrace();
         }
         try {
-            out = new FileOutputStream( new File("./src/main/resources/static/images/"+Path) );
+            out = new FileOutputStream( new File("./result/"+Path) );
             int i;
             while ((i = is.read()) != -1) {
                 out.write(i);
