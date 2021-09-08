@@ -20,66 +20,28 @@
 
 
 
-### 3. 구동 예시
->####초기 데이터 베이스 설정
-><pre><code>
->CREATE monday(
->    id    SERIAL NOT NULL
->    toon  VARCHAR(30),
->    image VARCHAR(150) DEFAULT 'https://image.chosun.com/sitedata/image/202006/24/2020062400801_0.png',
->    PRIMARY KEY(id)
->);
->
-> 다른요일도 동일하게 설정
-></code></pre>
->
->#### 데이터 입력
->- 초기 데이터입력은 주석처리된 코드를 풀어서 실행해주어야(cron.go)
-><pre><code>
->func SetupCron(location string) (*cron.Cron, error) {
->//ReadWriteAllday()  //처음 세팅할때만 돌림
->loc, err := time.LoadLocation(location)
->if err != nil {
->return nil, err
->}
->c := cron.New(cron.WithLocation(loc))
->_,err=c.AddFunc("0 8 * * *",  DailydataCheck)//매일 8시에 확인
->if err != nil {
->return nil, err
->}
->
->	return c, nil
->}           
->
->           
-></code></pre>
->#### CONFIG
-> <pre><code>
-> {
->"database": {
->"url": "데이터베이스 url : port",
->"user": "데이터베이스 User",
->"password": "데이터베이스  Password",
->"name": "naverwebtoon"
-> },
->"naverwebtoon": {
->"url":"네이버 웹툰 메인 홈페이지"
-> },
->"slackwebhook" : {
->"url" : "YOUR SLACK WEB HOOK"
-> },
->"linetoken" : {
->"token" : "YOUR Notify personal access token"
-> }
-> }
-> </code></pre>
+### 3. 구동 방법
+>1. install java 11
+>2. git clone https://github.com/cjm2021401/spring-yolov5.git
+>3. ./gradlew build
+>4. cd build/libs
+>5. java -jar spring-yolov5-0.0.1-SNAPSHOT.jar
 
-### 5. 구동
-                docker build -t <TAG> .
-                dockr run -p 8080:8080 <TAG>
 
-### 6. 예시
-![EXAMPLE(완결)](./img/IMG_0082.PNG)
+
+### 4. 구동예시
+1  get auth token
+![EXAMPLE(완결)](https://user-images.githubusercontent.com/19799501/132450602-8e49b7ec-724c-44ac-b2ce-d15c68ebe233.png)
+
+2  run yoloSetting.ipynb
+   ![EXAMPLE(완결)](https://user-images.githubusercontent.com/19799501/132450711-4b373e51-c5db-40ef-a949-9494972916b6.png)
+
+3 go to http://www.mayf.shop or localhost:8080
+![EXAMPLE(완결)](https://user-images.githubusercontent.com/19799501/132450777-9fae7825-c81d-4348-b75c-3297d2c01c2c.png)
+
+4 result
+![EXAMPLE(완결)](https://user-images.githubusercontent.com/19799501/132450829-d36a2c33-a804-4783-9c59-3d346f09e8f9.png)
+
 
 ### 문의
 - cjm2021401@khu.ac.kr
