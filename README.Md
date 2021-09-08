@@ -42,6 +42,8 @@
 4 result
 ![EXAMPLE(완결)](https://user-images.githubusercontent.com/19799501/132450829-d36a2c33-a804-4783-9c59-3d346f09e8f9.png)
 
-
+### 5. 사용 기술
+- spring-framework
+- yolov5
 ### 문의
 - cjm2021401@khu.ac.kr
