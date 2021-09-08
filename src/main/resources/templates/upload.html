@@ -62,6 +62,7 @@
             <div class="col-md-8 mx-auto" style="text-align: center">
                 <h2>Mosaic Cigarette&Tattoo</h2>
                 <hr class="my-4" style="background-color: black">
+                <a href="https://github.com/cjm2021401/spring-yolov5"><h4>How to use?</h4></a>
                 <form method="post" th:action="@{/upload}" enctype="multipart/form-data">
                     <div class="form-group file-upload" required="required">
                         <label class="control-label" for="document_file">File Upload</label><br>
@@ -75,7 +76,6 @@
                         </div>
 
                     </div>
-                    <a href="https://github.com/cjm2021401/spring-yolov5"><h3>How to use?</h3></a>
                     <div class="form-group">
                         <div >
                             <input class="form-control" id="host" name="host" type="text" placeholder="Input host" aria-label="Input Host">
@@ -85,8 +85,9 @@
                         </div><br/>
                         <div>
                             <input type="password" placeholder="Input password" name="password" class="form-control" id="inputPassword">
-                        </div><br/>
+                        </div>
                     </div>
+                    <hr class="my-4" style="background-color: black">
                     <button type="submit" class="btn btn-primary">Upload File</button>
                 </form>
                 <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
